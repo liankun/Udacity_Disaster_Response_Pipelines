@@ -1,16 +1,82 @@
 import sys
+import pandas as pd
+from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    """load csv files
+    input: 
+    messages_filepath,categories_fielpath
+    they are all csv files
+    output:
+    pandas dataframe df after merging 
+    these two csv files 
+
+    """
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    #merge on id
+    df = messages.merge(categories,on='id')
+
+    return df
 
 
 def clean_data(df):
-    pass
+    """clean_data
+    input:
+    df pandas dataframe
+    output:
+    df after clean
+    the following process will be applied:
+    1. categories column will be split into 36 columns
+    2. the orignial categories column will be dropped
+    3. remove duplicated rows
+    """
+    #create a dataframe of 36 individual categories
+    categories = df['categories'].str.split(";",expand=True)
+
+    #use the first row to get column name
+    row = categories.iloc[0,:].values
+    category_colnames = [x.split('-')[0] for x in row]
+
+    #rename the column name
+    categories.columns = category_colnames
+
+    #convert the values to numeric values 0 or 1
+    for column in categories:
+        categories[column] = categories[column].apply(lambda x: x[-1])
+
+        categories[column] = pd.to_numeric(categories[column])
+
+    #drop original categories
+    df.drop(['categories'],axis=1,inplace=True)
+
+    #concate df and categories
+    df = pd.concat([df,categories],axis=1)
+
+    #remove duplicated rows
+    df.drop_duplicates(inplace=True)
+
+    return df
+
+
+
+
 
 
 def save_data(df, database_filename):
-    pass  
+    """save date and load into data base
+    input:
+    df dataframe
+    database_filename string 
+    output
+    None
+
+    this function will save df into database
+    """
+
+    engine = create_engine('sqlite:///'+database_filename)
+    df.to_sql("messages_categories",engine,index=False)
 
 
 def main():

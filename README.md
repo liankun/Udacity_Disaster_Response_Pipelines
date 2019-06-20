@@ -2,8 +2,9 @@
 There are two directory:
 1. ETL_ML_Pipeline:
    - 'ETL Pipeline Preparation.ipynb': the notebook for ETL pipeline Preparation.In this notebook, the messages.csv data will be extracted, transformed , cleaned and finally loaded into a database
+   - 'ETL Pipeline Preparation.html': the html version 
    - 'ML Pipeline Preparation.ipynb': load the data from the database (previous step), perform NLP clean, norm process and finally build machine learning model.
-
+   - 'ML Pipeline Preparation.html': the html version
 2. web_app: 
    put the notebooks from previous file into the web apps
    - web_app/app: 
@@ -13,6 +14,10 @@ There are two directory:
      process_data.py python module to perform the ETL pipeline
    - web_app/models:
      train_classifier.py python module to perform ML pipeline
+
+
+### web applications screen shot
+![web screen shot](/web_screen_shot.png)
 
 
 ### Instructions:
